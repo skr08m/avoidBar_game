@@ -10,7 +10,7 @@ export class GameScreen implements Screen {
     barSpeed = 4;          // 全バー共通
     speedUp = 0.1;         // 加速量
     finished: boolean = false;
-    barNumber: number = 30;
+    barNumber: number = 10;
 
     constructor(manager: GameManager) {
         this.manager = manager;
