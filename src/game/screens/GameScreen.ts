@@ -10,7 +10,7 @@ export class GameScreen implements Screen {
     barSpeed = 4;          // 全バー共通
     speedUp = 0.1;         // 加速量
     finished: boolean = false;
-    barNumber: number = 30;
+    barNumber: number = 3;
 
     //バー生成
     constructor(manager: GameManager) {
@@ -46,6 +46,7 @@ export class GameScreen implements Screen {
 
             if (bar.isHit(mouse.x, mouse.y)) {
                 this.finished = true;
+                this.manager.mouse.consumeClick();
                 return;
             }
         }
@@ -62,6 +63,7 @@ export class GameScreen implements Screen {
         // 全部消えたらクリア
         if (this.bars.length === 0) {
             this.finished = true;
+            this.manager.mouse.consumeClick();
         }
 
     }
@@ -90,10 +92,42 @@ export class GameScreen implements Screen {
         ctx.fill();
 
         if (this.finished) {
-            ctx.fillStyle = "black";
-            ctx.font = "24px sans-serif";
-            ctx.fillText("FINISH - CLICK TO RESTART", 120, 400);
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            if (this.iscleared()) {
+                // ===== CLEARED =====
+                ctx.fillStyle = "#2ecc71"; // 明るいグリーン
+                ctx.font = "bold 32px sans-serif";
+                ctx.fillText(
+                    "CLEARED! - CLICK TO RESTART",
+                    this.manager.canvas.width / 2,
+                    this.manager.canvas.height / 2
+                );
+            } else {
+                // ===== GAME OVER =====
+                ctx.fillStyle = "#e74c3c"; // 赤
+                ctx.font = "bold 28px sans-serif";
+                ctx.fillText(
+                    "GAME OVER! - CLICK TO RESTART",
+                    this.manager.canvas.width / 2,
+                    this.manager.canvas.height / 2
+                );
+            }
+
+            // 共通サブテキスト（任意）
+            ctx.fillStyle = "#333";
+            ctx.font = "16px sans-serif";
+            ctx.fillText(
+                "Click anywhere to restart",
+                this.manager.canvas.width / 2,
+                this.manager.canvas.height / 2 + 40
+            );
         }
+
     }
 
+    iscleared = (): boolean => {
+        return this.bars.length === 0;
+    };
 }
