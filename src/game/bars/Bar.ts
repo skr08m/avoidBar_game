@@ -1,13 +1,12 @@
 export class Bar {
     y: number = -50;
-    speed: number = 3;
     canvasWidth: number;
 
     constructor(canvasWidth: number) {
         this.canvasWidth = canvasWidth;
     }
 
-    update(): void {
+    update(speed: number): void {
         throw new Error("update() must be implemented");
     }
 

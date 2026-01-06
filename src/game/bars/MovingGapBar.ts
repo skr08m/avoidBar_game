@@ -1,14 +1,21 @@
 import { Bar } from "./Bar";
 
 export class MovingGapBar extends Bar {
-    gapX = 100;
+    gapX = Math.random() * 260 + 70;
     gapWidth = 120;
-    dir = 1;
+    dir = Math.random() < 0.5 ? -1 : 1;
 
-    update() {
-        this.y += this.speed;
+    update(speed: number) {
+        this.y += speed;
         this.gapX += this.dir * 2;
-        if (this.gapX < 50 || this.gapX > 350) this.dir *= -1;
+
+        if (this.gapX <= 50) {
+            this.gapX = 50;
+            this.dir = 1;
+        } else if (this.gapX >= 350) {
+            this.gapX = 350;
+            this.dir = -1;
+        }
     }
 
     draw(ctx: CanvasRenderingContext2D) {

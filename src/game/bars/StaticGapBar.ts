@@ -4,8 +4,8 @@ export class StaticGapBar extends Bar {
     gapX = Math.random() * 300 + 50;
     gapWidth = 150;
 
-    update() {
-        this.y += this.speed;
+    update(speed: number) {
+        this.y += speed;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
