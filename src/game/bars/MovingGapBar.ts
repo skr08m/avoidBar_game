@@ -19,9 +19,16 @@ export class MovingGapBar extends Bar {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "red";
+        // 動くバーは赤オレンジ系
+        ctx.fillStyle = "#ff6347";
         ctx.fillRect(0, this.y, this.gapX, 30);
         ctx.fillRect(this.gapX + this.gapWidth, this.y, 600, 30);
+
+        // 枠線
+        ctx.strokeStyle = "#ff4500";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(0, this.y, this.gapX, 30);
+        ctx.strokeRect(this.gapX + this.gapWidth, this.y, 600, 30);
     }
 
     isHit(x: number, y: number): boolean {

@@ -35,28 +35,43 @@ export class StartScreen implements Screen {
 
     draw() {
         const ctx = this.manager.ctx;
+        const canvas = this.manager.canvas;
 
-        // タイトル
-        ctx.fillStyle = "blue";
-        ctx.font = "36px sans-serif";
+        // 背景グラデーション（青から紫系）
+        const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bgGradient.addColorStop(0, "#4a90e2"); // 明るい青
+        bgGradient.addColorStop(1, "#9013fe"); // 紫
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // タイトル文字（補色オレンジ系）
+        ctx.fillStyle = "#ffa500"; // 青の補色
+        ctx.font = "48px sans-serif";
         ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillText(
             "avoid the bars",
-            this.manager.canvas.width / 2,
-            this.manager.canvas.height / 2 - 40
+            canvas.width / 2,
+            canvas.height / 2 - 40
         );
 
-        // ボタン背景
-        ctx.fillStyle = "#eeeeee";
+        // ボタン背景（青系の補色でホバー変化）
+        const mouse = this.manager.mouse;
+        const isHover =
+            mouse.x >= this.buttonX &&
+            mouse.x <= this.buttonX + this.buttonWidth &&
+            mouse.y >= this.buttonY &&
+            mouse.y <= this.buttonY + this.buttonHeight;
+
+        ctx.fillStyle = isHover ? "#ffb347" : "#ffeeaa"; // 補色オレンジ系
+        ctx.strokeStyle = isHover ? "#ff8c00" : "black"; // 枠線も補色強調
+        ctx.lineWidth = 3;
         ctx.fillRect(
             this.buttonX,
             this.buttonY,
             this.buttonWidth,
             this.buttonHeight
         );
-
-        // ボタン枠
-        ctx.strokeStyle = "black";
         ctx.strokeRect(
             this.buttonX,
             this.buttonY,
@@ -65,17 +80,18 @@ export class StartScreen implements Screen {
         );
 
         // ボタン文字
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "#333"; // ボタン文字は暗めで読みやすく
         ctx.font = "24px sans-serif";
         ctx.textBaseline = "middle";
         ctx.fillText(
             "START",
-            this.manager.canvas.width / 2,
+            canvas.width / 2,
             this.buttonY + this.buttonHeight / 2
         );
 
-        // 描画状態リセット（癖防止）
+        // 描画状態リセット
         ctx.textAlign = "start";
         ctx.textBaseline = "alphabetic";
+        ctx.lineWidth = 1;
     }
 }

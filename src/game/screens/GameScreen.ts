@@ -10,9 +10,8 @@ export class GameScreen implements Screen {
     barSpeed = 4;          // 全バー共通
     speedUp = 0.1;         // 加速量
     finished: boolean = false;
-    barNumber: number = 3;
+    barNumber: number = 30;
 
-    //バー生成
     constructor(manager: GameManager) {
         this.manager = manager;
 
@@ -60,35 +59,34 @@ export class GameScreen implements Screen {
             }
         }
 
-        // 全部消えたらクリア
         if (this.bars.length === 0) {
             this.finished = true;
             this.manager.mouse.consumeClick();
         }
-
     }
-
 
     draw() {
         const ctx = this.manager.ctx;
+        const canvas = this.manager.canvas;
 
-        // 背景
-        ctx.fillStyle = "#ccc";
-        ctx.fillRect(
-            0,
-            0,
-            this.manager.canvas.width,
-            this.manager.canvas.height
-        );
+        // 背景グラデーション（青→紫）
+        const bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bgGradient.addColorStop(0, "#4a90e2"); // 明るい青
+        bgGradient.addColorStop(1, "#9013fe"); // 紫
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        // バー描画（補色オレンジ系）
         for (const bar of this.bars) {
+            // バー色を背景補色のオレンジ系で統一
+            bar.setColor("#ffa500");
             bar.draw(ctx);
         }
 
-        // マウス表示
-        ctx.fillStyle = "blue";
+        // マウス表示（補色系明るめ）
+        ctx.fillStyle = "#ffb347";
         ctx.beginPath();
-        ctx.arc(this.manager.mouse.x, this.manager.mouse.y, 5, 0, Math.PI * 2);
+        ctx.arc(this.manager.mouse.x, this.manager.mouse.y, 6, 0, Math.PI * 2);
         ctx.fill();
 
         if (this.finished) {
@@ -96,35 +94,41 @@ export class GameScreen implements Screen {
             ctx.textBaseline = "middle";
 
             if (this.iscleared()) {
-                // ===== CLEARED =====
-                ctx.fillStyle = "#2ecc71"; // 明るいグリーン
-                ctx.font = "bold 32px sans-serif";
+                ctx.fillStyle = "#fff176"; // 明るい黄色
+                ctx.font = "bold 36px sans-serif";
                 ctx.fillText(
                     "CLEARED! - CLICK TO RESTART",
-                    this.manager.canvas.width / 2,
-                    this.manager.canvas.height / 2
+                    canvas.width / 2,
+                    canvas.height / 2
                 );
             } else {
-                // ===== GAME OVER =====
-                ctx.fillStyle = "#e74c3c"; // 赤
-                ctx.font = "bold 28px sans-serif";
+                ctx.fillStyle = "#ff6f61"; // ピンクオレンジ系
+                ctx.font = "bold 36px sans-serif";
                 ctx.fillText(
                     "GAME OVER! - CLICK TO RESTART",
-                    this.manager.canvas.width / 2,
-                    this.manager.canvas.height / 2
+                    canvas.width / 2,
+                    canvas.height / 2
                 );
             }
 
-            // 共通サブテキスト（任意）
-            ctx.fillStyle = "#333";
-            ctx.font = "16px sans-serif";
+            // サブテキスト（白で統一）
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "18px sans-serif";
             ctx.fillText(
                 "Click anywhere to restart",
-                this.manager.canvas.width / 2,
-                this.manager.canvas.height / 2 + 40
+                canvas.width / 2,
+                canvas.height / 2 + 50
             );
-        }
 
+            // 文字に薄い影をつける
+            ctx.shadowColor = "rgba(0,0,0,0.4)";
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.shadowBlur = 4;
+
+            // 描画後に影をリセット
+            ctx.shadowColor = "transparent";
+        }
     }
 
     iscleared = (): boolean => {

@@ -1,9 +1,15 @@
 export class Bar {
     y: number = -50;
     canvasWidth: number;
+    color: string = "black"; // 追加: デフォルト色
 
     constructor(canvasWidth: number) {
         this.canvasWidth = canvasWidth;
+    }
+
+    // 色を変更するメソッド
+    setColor(color: string) {
+        this.color = color;
     }
 
     update(speed: number): void {
